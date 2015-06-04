@@ -24,14 +24,13 @@ struct ProcessingRecord {
     unsigned nWhistleMissFrames, nWhistleOkayFrames;
 };
 
-static int executeAction(const ProcessingRecord &config, void (*whistleAction)(void));
-static int runFrequencyExtraction(ProcessingRecord &config, void (*whistleAction)(void));
+int executeAction(const ProcessingRecord &config, void (*whistleAction)(void));
+int runFrequencyExtraction(ProcessingRecord &config, void (*whistleAction)(void));
 void stopListening(int signal);
 
 static AlsaRecorder *reader = NULL;
 
 int main_loop(const std::string& configFile, void (*whistleAction)(void)) {
-
 
     ProcessingRecord config;
     boost::property_tree::ptree iniConfig;
@@ -65,7 +64,7 @@ int main_loop(const std::string& configFile, void (*whistleAction)(void)) {
     return result;
 }
 
-static int runFrequencyExtraction(ProcessingRecord &config, void (*whistleAction)(void))
+int runFrequencyExtraction(ProcessingRecord &config, void (*whistleAction)(void))
 {
     /* load window times */
     config.nWhistleBegin = (config.fWhistleBegin * config.nWindowSizePadded) / config.fSampleRate;
@@ -121,7 +120,7 @@ void stopListening(int signal)
     }
 }
 
-static int executeAction(const ProcessingRecord &config, void (*whistleAction)(void))
+int executeAction(const ProcessingRecord &config, void (*whistleAction)(void))
 {
     auto calcMeanDeviation = [&] (const float *data, int length, float &mean, float &dev) {
         mean = dev = 0;
