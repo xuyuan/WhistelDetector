@@ -31,8 +31,7 @@ static void whistleAction(void);
 
 static AlsaRecorder *reader = NULL;
 
-int main(int argc, char **argv)
-{
+int main_loop() {
     std::string configFile("WhistleConfig.ini");
 
     ProcessingRecord config;

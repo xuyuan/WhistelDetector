@@ -55,7 +55,7 @@ include_directories(SYSTEM ${BOOST_INCLUDE_DIRS} ${FFTW3F_INCLUDE_DIRS} ${ALSA_I
 
 option(WHITEL_DETECTOR_IS_REMOTE "module is compiled as a remote module" OFF)
 
-qi_create_bin(whistel_detector ${SRCS})
+qi_create_bin(whistel_detector ${SRCS} src/test.cpp)
 target_link_libraries(whistel_detector ${FFTW3F_LIBRARIES} ${ALSA_LIBRARIES})
 
 
