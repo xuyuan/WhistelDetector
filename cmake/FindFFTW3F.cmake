@@ -27,6 +27,12 @@
 #  FFTW3F_LIBRARIES - The libraries needed to use fftw3f
 #  FFTW3F_DEFINITIONS - Compiler switches required for using fftw3f
 
+if(CMAKE_CROSSCOMPILING)
+    message(STATUS "assume fftw is included cross toolchain")
+    set(FFTW3F_DIR ${ALDE_CTC_ROOTDIR}/fftw)
+    set(FFTW3F_INCLUDE_DIR ${FFTW3F_DIR}/include)
+    set(FFTW3F_LIBRARY ${FFTW3F_DIR}/lib/libfftw3f.a)
+else(CMAKE_CROSSCOMPILING)
 find_package(PkgConfig)
 pkg_check_modules(PC_FFTW3F "fftw3f >= 3.0")
 set(FFTW3F_DEFINITIONS ${PC_FFTW3F_CFLAGS_OTHER})
@@ -42,6 +48,7 @@ find_library(FFTW3F_LIBRARY
             HINTS ${PC_FFTW3F_LIBDIR} ${PC_FFTW3F_LIBRARY_DIRS} $ENV{FFTW3_DIR}/lib
             PATHS /usr/local/lib
                   /usr/lib)
+endif(CMAKE_CROSSCOMPILING)
 
 set(FFTW3F_LIBRARIES ${FFTW3F_LIBRARY} )
 set(FFTW3F_INCLUDE_DIRS ${FFTW3F_INCLUDE_DIR} )

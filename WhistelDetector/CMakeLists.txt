@@ -12,7 +12,7 @@ find_package(qibuild)
 
 include(CheckCXXCompilerFlag)
 message("use toolchain: " ${CMAKE_TOOLCHAIN_FILE})
-
+find_package(BOOST REQUIRED)
 find_package(FFTW3F REQUIRED)
 find_package(ALSA REQUIRED)
 
@@ -51,7 +51,7 @@ set(SRCS
     src/main.cpp
     )
   
-include_directories(SYSTEM ${FFTW3F_INCLUDE_DIRS} ${ALSA_INCLUDE_DIRS})
+include_directories(SYSTEM ${BOOST_INCLUDE_DIRS} ${FFTW3F_INCLUDE_DIRS} ${ALSA_INCLUDE_DIRS})
 
 option(WHITEL_DETECTOR_IS_REMOTE "module is compiled as a remote module" OFF)
 
