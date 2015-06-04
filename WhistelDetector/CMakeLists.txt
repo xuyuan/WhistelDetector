@@ -41,7 +41,7 @@ add_cxx_compiler_flag_if_possible(-ipo SUPPORT_IPO)
 add_cxx_compiler_flag_if_possible(-fcolor-diagnostics SUPPORT_FCOLOR_DIAGNOSTICS)
 add_cxx_compiler_flag_if_possible(-Wno-unused-parameter NO_UNSED_PARAMETER)
 add_cxx_compiler_flag_if_possible(-Wno-ignored-qualifiers NO_IGNORED_QUALIFIERS)
-
+add_definitions(-DBOOST_SIGNALS_NO_DEPRECATION_WARNING)  #ignore warnings from boost
 add_definitions(-DNAO)
 
 
@@ -51,11 +51,18 @@ set(SRCS
     src/main.cpp
     )
   
-include_directories(SYSTEM ${BOOST_INCLUDE_DIRS} ${FFTW3F_INCLUDE_DIRS} ${ALSA_INCLUDE_DIRS})
+include_directories(SYSTEM ${BOOST_INCLUDE_DIRS} ${FFTW3F_INCLUDE_DIRS} ${ALSA_INCLUDE_DIRS} ${ALCOMMON_INCLUDE_DIRS})
 
-option(WHITEL_DETECTOR_IS_REMOTE "module is compiled as a remote module" OFF)
+option(MODULE_IS_REMOTE "module is compiled as a remote module" OFF)
 
-qi_create_bin(whistel_detector ${SRCS} src/test.cpp)
+qi_create_bin(whistel_detector_test ${SRCS} src/test.cpp)
+target_link_libraries(whistel_detector_test ${FFTW3F_LIBRARIES} ${ALSA_LIBRARIES})
+
+if(MODULE_IS_REMOTE)
+  add_definitions(-DMODULE_IS_REMOTE)
+  qi_create_bin(whistel_detector ${SRCS} src/module.cpp)
+else(MODULE_IS_REMOTE)
+  qi_create_lib(whistel_detector SHARED ${SRCS} src/module.cpp)
+endif(MODULE_IS_REMOTE)
 target_link_libraries(whistel_detector ${FFTW3F_LIBRARIES} ${ALSA_LIBRARIES})
-
-
+qi_use_lib(whistel_detector ALCOMMON)

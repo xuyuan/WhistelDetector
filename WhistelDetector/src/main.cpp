@@ -3,7 +3,7 @@
  * \author Thomas Hamboeck, Austrian Kangaroos 2014
  */
 
-#include <csignal>
+
 #include <iostream>
 #include <functional>
 #include <boost/property_tree/ptree.hpp>
@@ -24,15 +24,14 @@ struct ProcessingRecord {
     unsigned nWhistleMissFrames, nWhistleOkayFrames;
 };
 
-static int executeAction(ProcessingRecord &config);
-static int runFrequencyExtraction(ProcessingRecord &config);
-static void stopListening(int signal);
-static void whistleAction(void);
+static int executeAction(ProcessingRecord &config, void (*whistleAction)(void));
+static int runFrequencyExtraction(ProcessingRecord &config, void (*whistleAction)(void));
+void stopListening(int signal);
 
 static AlsaRecorder *reader = NULL;
 
-int main_loop() {
-    std::string configFile("WhistleConfig.ini");
+int main_loop(const std::string& configFile, void (*whistleAction)(void)) {
+
 
     ProcessingRecord config;
     boost::property_tree::ptree iniConfig;
@@ -57,7 +56,7 @@ int main_loop() {
               << "---------------------------------------------------" << std::endl;
 
     int result;
-    result = runFrequencyExtraction(config);
+    result = runFrequencyExtraction(config, whistleAction);
     if(result == 0) {
         std::cout << "--------------------- Success ---------------------" << std::endl;
     } else {
@@ -66,12 +65,7 @@ int main_loop() {
     return result;
 }
 
-static void whistleAction(void)
-{
-    std::cout << "  !!! Whistle heard !!!" << std::endl;
-}
-
-static int runFrequencyExtraction(ProcessingRecord &config)
+static int runFrequencyExtraction(ProcessingRecord &config, void (*whistleAction)(void))
 {
     /* load window times */
     config.nWhistleBegin = (config.fWhistleBegin * config.nWindowSizePadded) / config.fSampleRate;
@@ -113,12 +107,12 @@ static int runFrequencyExtraction(ProcessingRecord &config)
         return -1;
     }
 
-    executeAction(config);
+    executeAction(config, whistleAction);
 
     return 0;
 }
 
-static void stopListening(int signal)
+void stopListening(int signal)
 {
     if(reader) {
         if(reader->isRunning()) {
@@ -127,7 +121,7 @@ static void stopListening(int signal)
     }
 }
 
-static int executeAction(ProcessingRecord &config)
+static int executeAction(ProcessingRecord &config, void (*whistleAction)(void))
 {
     auto calcMeanDeviation = [&] (const float *data, int length, float &mean, float &dev) {
         mean = dev = 0;
@@ -193,9 +187,6 @@ static int executeAction(ProcessingRecord &config)
 
     STFT stft(0, config.nWindowSize, config.nWindowSkipping, config.nWindowSizePadded, handleSpectrum);
     reader = new AlsaRecorder(std::bind(&STFT::newData, &stft, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
-
-    signal(SIGINT,  &stopListening);
-    signal(SIGTERM, &stopListening);
 
     std::cout << "Listening ..." << std::endl;
     reader->main();
