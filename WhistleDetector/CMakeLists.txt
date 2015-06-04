@@ -4,7 +4,7 @@
 
 cmake_minimum_required(VERSION 2.8.10 FATAL_ERROR)
 SET(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/../cmake)
-project(whistel_detector)
+project(whistle_detector)
 enable_language(CXX)
 
 set(OPTIMIZE_FOR_TARGET ATOM)
@@ -55,14 +55,14 @@ include_directories(SYSTEM ${BOOST_INCLUDE_DIRS} ${FFTW3F_INCLUDE_DIRS} ${ALSA_I
 
 option(MODULE_IS_REMOTE "module is compiled as a remote module" OFF)
 
-qi_create_bin(whistel_detector_test ${SRCS} src/test.cpp)
-target_link_libraries(whistel_detector_test ${FFTW3F_LIBRARIES} ${ALSA_LIBRARIES})
+qi_create_bin(whistle_detector_test ${SRCS} src/test.cpp)
+target_link_libraries(whistle_detector_test ${FFTW3F_LIBRARIES} ${ALSA_LIBRARIES})
 
 if(MODULE_IS_REMOTE)
   add_definitions(-DMODULE_IS_REMOTE)
-  qi_create_bin(whistel_detector ${SRCS} src/module.cpp)
+  qi_create_bin(whistle_detector ${SRCS} src/module.cpp)
 else(MODULE_IS_REMOTE)
-  qi_create_lib(whistel_detector SHARED ${SRCS} src/module.cpp)
+  qi_create_lib(whistle_detector SHARED ${SRCS} src/module.cpp)
 endif(MODULE_IS_REMOTE)
-target_link_libraries(whistel_detector ${FFTW3F_LIBRARIES} ${ALSA_LIBRARIES})
-qi_use_lib(whistel_detector ALCOMMON)
+target_link_libraries(whistle_detector ${FFTW3F_LIBRARIES} ${ALSA_LIBRARIES})
+qi_use_lib(whistle_detector ALCOMMON)

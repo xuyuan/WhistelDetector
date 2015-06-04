@@ -24,7 +24,7 @@ struct ProcessingRecord {
     unsigned nWhistleMissFrames, nWhistleOkayFrames;
 };
 
-static int executeAction(ProcessingRecord &config, void (*whistleAction)(void));
+static int executeAction(const ProcessingRecord &config, void (*whistleAction)(void));
 static int runFrequencyExtraction(ProcessingRecord &config, void (*whistleAction)(void));
 void stopListening(int signal);
 
@@ -121,7 +121,7 @@ void stopListening(int signal)
     }
 }
 
-static int executeAction(ProcessingRecord &config, void (*whistleAction)(void))
+static int executeAction(const ProcessingRecord &config, void (*whistleAction)(void))
 {
     auto calcMeanDeviation = [&] (const float *data, int length, float &mean, float &dev) {
         mean = dev = 0;
