@@ -1,10 +1,13 @@
 # WhistleDetector
 
 ## Build
-
+use qibuild
 
 ## Calibration for specific whistle
-
+* run whistle_detector in PC
+* whistle, and check the ouput
+* adjust WhistleBegin and WhistleEnd in WhistleConfig.ini to fit specific whistle
+* restart whistle_detector and test until satisfied
 
 # Setup in NAO
 * build whistle recognition module with qibuild, copy _WhistleDetector/build-atom/sdk/lib/libwhistle_detector.so_ to _~/lib_ folder in NAO
