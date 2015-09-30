@@ -1,4 +1,5 @@
 # WhistleDetector
+Fork of whistle detector from Thomas Hamboeck, Austrian Kangaroos 2014.
 
 ## Build
 use qibuild
