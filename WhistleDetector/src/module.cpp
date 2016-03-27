@@ -16,7 +16,7 @@ extern void stopListening(int signal);
 class WhistelDetector: public AL::ALModule {
 public:
     WhistelDetector(boost::shared_ptr<AL::ALBroker> broker, const std::string &name): AL::ALModule(broker, name), mWhistelCount(0) {
-        setModuleDescription("Whistel Detector");
+        setModuleDescription("Whistle Detector");
     }
 
     virtual ~WhistelDetector() {
@@ -27,9 +27,9 @@ public:
         if (mSelf == NULL) {
             mSelf = this;
         }
-        mMemoryProxy.declareEvent("WhistelHeard");
+        mMemoryProxy.declareEvent("WhistleHeard");
         mThread = boost::thread(&WhistelDetector::main, this);
-        pthread_setname_np(mThread.native_handle(), "WhistelDetector");
+        pthread_setname_np(mThread.native_handle(), "WhistleDetector");
     }
 
     virtual void exit() {
@@ -48,7 +48,7 @@ private:
 
     void whistleAction() {
         mWhistelCount++;
-        mMemoryProxy.raiseEvent("WhistelHeard", mWhistelCount);
+        mMemoryProxy.raiseEvent("WhistleHeard", mWhistelCount);
     }
 
 private:
@@ -66,7 +66,7 @@ extern "C"
         AL::ALBrokerManager::setInstance(pBroker->fBrokerManager.lock());
         AL::ALBrokerManager::getInstance()->addBroker(pBroker);
 
-        AL::ALModule::createModule<WhistelDetector>(pBroker,"WhistelDetector" );
+        AL::ALModule::createModule<WhistelDetector>(pBroker,"WhistleDetector" );
 
         return 0;
     }
