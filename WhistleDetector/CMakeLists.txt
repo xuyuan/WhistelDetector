@@ -66,3 +66,8 @@ else(MODULE_IS_REMOTE)
 endif(MODULE_IS_REMOTE)
 target_link_libraries(whistle_detector ${FFTW3F_LIBRARIES} ${ALSA_LIBRARIES})
 qi_use_lib(whistle_detector ALCOMMON)
+
+## ignore warnings from naoqi's header files
+string(REPLACE ";" " " NAOQI_INCLUDE ${ALCOMMON_INCLUDE_DIRS})
+set_target_properties(whistle_detector PROPERTIES APPEND_STRING PROPERTY
+    COMPILE_FLAGS "${CMAKE_INCLUDE_SYSTEM_FLAG_CXX} ${NAOQI_INCLUDE}")
