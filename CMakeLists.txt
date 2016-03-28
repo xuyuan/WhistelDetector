@@ -3,7 +3,7 @@
 ##
 
 cmake_minimum_required(VERSION 2.8.10 FATAL_ERROR)
-SET(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/../cmake)
+SET(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 project(whistle_detector)
 enable_language(CXX)
 
