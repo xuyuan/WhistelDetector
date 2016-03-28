@@ -11,12 +11,17 @@
 
 extern int main_loop(const std::string& configFile, void (*whistleAction)(void));
 extern void stopListening(int signal);
+extern void setListeningPaused(bool paused);
 
 
 class WhistelDetector: public AL::ALModule {
 public:
     WhistelDetector(boost::shared_ptr<AL::ALBroker> broker, const std::string &name): AL::ALModule(broker, name), mWhistelCount(0) {
         setModuleDescription("Whistle Detector");
+
+        functionName("setPaused", getName(), "pause / unpause whistel detection");
+        addParam("paused", "bool for paused");
+        BIND_METHOD(WhistelDetector::setPaused);
     }
 
     virtual ~WhistelDetector() {
@@ -35,6 +40,10 @@ public:
     virtual void exit() {
         stopListening(0);
         mThread.join();
+    }
+
+    void setPaused(bool paused) {
+        setListeningPaused(paused);
     }
 
 private:
