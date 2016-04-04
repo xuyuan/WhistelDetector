@@ -27,6 +27,7 @@ struct ProcessingRecord {
 int executeAction(const ProcessingRecord &config, void (*whistleAction)(void));
 int runFrequencyExtraction(ProcessingRecord &config, void (*whistleAction)(void));
 void stopListening(int signal);
+void setListeningPaused(bool paused);
 
 static AlsaRecorder *reader = NULL;
 
@@ -117,6 +118,12 @@ void stopListening(int signal)
         if(reader->isRunning()) {
             reader->stop();
         }
+    }
+}
+
+void setListeningPaused(bool paused) {
+    if(reader) {
+        reader->setListeningPaused(paused);
     }
 }
 

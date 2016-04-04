@@ -10,7 +10,7 @@
 #include <iostream>
 
 AlsaRecorder::AlsaRecorder(std::function<void (const int16_t*, int, short)> handler)
-    : audioBuffer(NULL), handler(handler), running(false)
+    : audioBuffer(NULL), handler(handler), running(false), mPaused(false)
 {
 }
 
@@ -26,6 +26,16 @@ void AlsaRecorder::main()
     running = true;
 
     while(running) {
+
+        // wait if is paused
+        {
+            std::unique_lock<std::mutex> lock(mPausedMutex);
+            if (mPaused) {
+                std::cout<<"paused, waiting...\n";
+                mPausedCondition.wait(lock);
+            }
+        }
+
         int err;
         if((err = snd_pcm_readi(captureHandle, audioBuffer, bufferSize)) != bufferSize) {
             std::cerr << "read from audio interface failed " << snd_strerror(err) << std::endl;
@@ -54,6 +64,20 @@ void AlsaRecorder::stop()
 bool AlsaRecorder::isRunning() const
 {
     return running;
+}
+
+void AlsaRecorder::setListeningPaused(bool paused) {
+    std::unique_lock<std::mutex> lock(mPausedMutex);
+    if (mPaused == paused) {
+        // nothing to do
+        return;
+    }
+
+    mPaused = paused;
+    if (!mPaused) {
+        std::cout<<"unpaused!\n";
+        mPausedCondition.notify_one();
+    }
 }
 
 /*******************************************************************/
