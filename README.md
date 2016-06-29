@@ -2,7 +2,14 @@
 Fork of whistle detector from Thomas Hamboeck, Austrian Kangaroos 2014.
 
 ## Build
+
+### dependency (ubuntu)
+`sudo apt-get install libfftw3-dev libasound2-dev`
+
 use qibuild
+
+
+
 
 ## Calibration for specific whistle
 * run whistle_detector in PC
