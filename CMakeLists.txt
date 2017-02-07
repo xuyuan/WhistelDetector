@@ -3,20 +3,22 @@
 ##
 
 cmake_minimum_required(VERSION 2.8.10 FATAL_ERROR)
+set(OPTIMIZE_FOR_TARGET ATOM)
+
 SET(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 project(whistle_detector)
 enable_language(CXX)
 
-set(OPTIMIZE_FOR_TARGET ATOM)
 find_package(qibuild)
 
 include(CheckCXXCompilerFlag)
 message("use toolchain: " ${CMAKE_TOOLCHAIN_FILE})
-find_package(BOOST REQUIRED)
+find_package(BOOST REQUIRED COMPONENTS thread)
 find_package(FFTW3F REQUIRED)
 find_package(ALSA REQUIRED)
 
-add_definitions(-Wall -Wextra -Werror -std=gnu++0x)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++0x")
+add_definitions(-Wall -Wextra -Werror)
 add_definitions(-Wfatal-errors)  # stop after first error
 
 function(add_cxx_compiler_flag_if_possible flag result)
@@ -57,6 +59,7 @@ option(MODULE_IS_REMOTE "module is compiled as a remote module" OFF)
 
 qi_create_bin(whistle_detector_test ${SRCS} src/test.cpp)
 target_link_libraries(whistle_detector_test ${FFTW3F_LIBRARIES} ${ALSA_LIBRARIES})
+qi_use_lib(whistle_detector_test PTHREAD)
 
 if(MODULE_IS_REMOTE)
   add_definitions(-DMODULE_IS_REMOTE)

@@ -6,7 +6,6 @@
 #ifndef __AK_ALSA_RECORDER__
 #define __AK_ALSA_RECORDER__
 
-#include <stdint.h>
 #include <alsa/asoundlib.h>
 #include <vector>
 #include <functional>
